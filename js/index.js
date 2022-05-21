@@ -1,3 +1,5 @@
+//const MemoryGame = require("./memory");
+
 const cards = [
   { name: 'aquaman', img: 'aquaman.jpg' },
   { name: 'batman', img: 'batman.jpg' },
@@ -41,11 +43,49 @@ window.addEventListener('load', (event) => {
   // Add all the divs to the HTML
   document.querySelector('#memory-board').innerHTML = html;
 
+  let firstCard;
+
+  function f(el) {
+    const name =  el.getAttribute('data-card-name') // "batman"
+    return cards.find(el => el.name === name) // {name: 'batman', img: ''}
+  }
+
   // Bind the click event of each element to a function
-  document.querySelectorAll('.card').forEach((card) => {
-    card.addEventListener('click', () => {
-      // TODO: write some code here
-      console.log(`Card clicked: ${card}`);
+  document.querySelectorAll('.card').forEach((currentCard) => {
+    currentCard.addEventListener('click', () => {
+
+      // First click
+      if (!firstCard) {
+        firstCard = currentCard;
+        firstCard.classList.toggle('turned');
+
+      // Second click
+      } else {
+        currentCard.classList.toggle('turned');
+
+        const cardA = f(firstCard) // {name: 'batman'}
+        const cardB = f(currentCard);
+        let matched = memoryGame.checkIfPair(cardA, cardB);
+
+        setTimeout(() => {      
+          firstCard.classList.toggle('turned', matched);
+          currentCard.classList.toggle('turned', matched);
+          
+          firstCard = undefined;    // Shouldn't be executed before the previous ones have been executed too
+
+          // Updating score
+        const clicked = document.getElementById("pairs-clicked").innerHTML = memoryGame.pairsClicked;
+        const guessed = document.getElementById("pairs-guessed").innerHTML = memoryGame.pairsGuessed;
+
+        // Checking if the game is finished
+        if (memoryGame.checkIfFinished()) {
+          alert('You guessed all the pairs, congrats !')
+
+          let reset = prompt('Do you want to play again ? (Yes/No)')
+          if (reset === 'Yes') { memoryGame.reset(); }
+        }
+        }, 1500);
+      }
     });
   });
 });

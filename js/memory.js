@@ -4,6 +4,16 @@ class MemoryGame {
     this.pickedCards    = [];       // Currently picked couple of cards
     this.pairsClicked   = 0;        // Counting user attempts
     this.pairsGuessed   = 0;        // Counting matched pairs
+
+    this.shuffleCards();
+  }
+
+  reset() {
+    this.pickedCards    = [];
+    this.pairsClicked   = 0;
+    this.pairsGuessed   = 0;
+
+    this.shuffleCards();
   }
 
   shuffleCards() {
@@ -41,9 +51,9 @@ class MemoryGame {
   }
 
   checkIfFinished() {
-    const totalPairs = this.cards.length;
+    const totalPairs = this.cards.length / 2;
 
-    return this.pairsGuessed.length === totalPairs;
+    return this.pairsGuessed === totalPairs;
   }
 }
 
